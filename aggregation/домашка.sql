@@ -211,3 +211,71 @@ FROM Sales.OrderLines
 --обавьте вариант этого запроса с постраничной выборкой пропустив первую 1000 и отобразив следующие 100 записей.
 --оритровка должна быть по номеру квартала, трети года, дате продажи. 
 
+SELECT DATENAME ( qq , s.OrderDate ), DATENAME ( m , s.OrderDate ), s.OrderDate, 
+   CASE 
+      WHEN DATEPART (mm, s.OrderDate ) in (1,2,3,4) THEN 1
+	  WHEN DATEPART (mm, s.OrderDate ) in (5,6,7,8) THEN 2
+	  ELSE 3
+	  END as A
+
+From Sales.Orders as s
+    
+
+
+SELECT  
+   CASE 
+      WHEN DATEPART (mm, s.OrderDate ) in (1,2,3,4) THEN 1
+	  WHEN DATEPART (mm, s.OrderDate ) in (5,6,7,8) THEN 2
+	  ELSE 3
+	  END as A
+
+From Sales.Orders as s
+
+GROUP BY     CASE 
+      WHEN DATEPART (mm, s.OrderDate ) in (1,2,3,4) THEN 1
+	  WHEN DATEPART (mm, s.OrderDate ) in (5,6,7,8) THEN 2
+	  ELSE 3
+	  END  
+
+SELECT  
+   CASE 
+      WHEN DATEPART (mm, s.OrderDate ) in (1,2,3,4) THEN 1
+	  WHEN DATEPART (mm, s.OrderDate ) in (5,6,7,8) THEN 2
+	  ELSE 3
+	  END as A, count (*), s.OrderDate
+
+From Sales.Orders as s
+
+GROUP BY     CASE 
+      WHEN DATEPART (mm, s.OrderDate ) in (1,2,3,4) THEN 1
+	  WHEN DATEPART (mm, s.OrderDate ) in (5,6,7,8) THEN 2
+	  ELSE 3
+	  END 
+
+
+SELECT DATEPART (hour, '20010101') 
+
+---10 последних по дате продаж с именем клиента и именем сотрудника, который оформил заказ.
+
+SELECT TOP 10 
+s.OrderID,
+p.FullName as SalesPerson,
+s.OrderDate,
+i.PackedByPersonID as Packer,
+c.CustomerName
+FROM [Sales].[Orders] as s
+JOIN Sales.Invoices as i
+on s.OrderID = i.OrderID
+JOIN Application.People p 
+	ON p.PersonID = s.SalespersonPersonID
+JOIN Sales.Customers as c
+on c.CustomerID= s.CustomerID
+ORDER BY s.OrderDate DESC
+
+SELECT *
+From [Sales].[Orders]
+
+SELECT *
+From [Sales].[Customers]
+
+--
